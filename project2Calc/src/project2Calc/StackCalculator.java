@@ -13,14 +13,14 @@ public class StackCalculator {
 	Queue<Character> exp;//expression is read into this queue
 	
 	StringTokenizer st;//tokenizes the strings from the expression queue
-	Queue<Character> out;//holds the postfix expression
+	Queue<Object> out;//holds the postfix expression
 	ArrayList<String> vars;//holds the declared variables
 	Precedence p;
 	
-	public StackCalculator() {
+	public StackCalculator() {//constructor
 		ops = new Stack<Character>();
 		exp = new LinkedList<Character>();
-		out = new LinkedList<Character>();
+		out = new LinkedList<>();
 		vars = new ArrayList<>();
 		p = new Precedence();
 		
@@ -28,21 +28,23 @@ public class StackCalculator {
 	
 	public int processInput(String ex) {//calculates the value of a postfix expression
 		Stack<Integer> calc = new Stack<Integer>();//the stack that holds the integers
-				String input = toPostFix(ex);
+				ArrayList<Object> input = toPostFix(ex);
 				int a = 0;//the first integer in the operation
 			    int b = 0;//the second integer in the operation
 			    int r = 0;//the result of the operation
-		for(int i = 0; i < input.length(); i++){
-		    
-			char c = input.charAt(i);//reading the next character of the expression
-		    a = 0;
-		    b = 0;
-		    r = 0;
-		    if(Character.isDigit(c)){
-		       int t = Character.getNumericValue(c);
+		for(int i = 0; i < input.size(); i++){
+			 a = 0;
+			 b = 0;
+			 r = 0;
+			
+		   
+		    if(isInteger(input.get(i))){
+		       Integer t = toInteger(input.get(i));
 		        calc.push(t);
 		    }
+		   
 		    else{//each case handles a different operation, the result of the operation is pushed back to the stack
+		    	char c = (char)input.get(i);//reading the next character of the expression
 		    	switch(c) {
 		    	
 		    case'+':
@@ -115,11 +117,11 @@ public class StackCalculator {
 	
 	
 	
-	public String toPostFix(String s) {//converts a string expression from in fix to post fix
-		String postfixexp = "";//the converted postfix expression
+	public ArrayList<Object> toPostFix(String s) {//converts a string expression from in fix to post fix
+		ArrayList<Object> postfix = new ArrayList<Object>();//the converted postfix expression
 		char c;//current character
 		
-		Scanner in  = new Scanner(s);
+		//Scanner in  = new Scanner(s);
 		s = s.replaceAll("\\s","");//taking all whitespace out of the string
 		char [] characters = s.toCharArray();//holds all the characters in the expression
 		
@@ -130,8 +132,16 @@ public class StackCalculator {
 			while(!exp.isEmpty()) {//runs until the x
 				c = exp.remove();
 			
-			if(Character.isDigit(c)) {//adding all numbers to out queue
-				out.add(c);
+			if(( c >= '0' && c <= '9' )) {//adding all numbers to out queue
+				int i = Character.getNumericValue(c);
+				int j;
+				while( exp.peek() >= '0' && exp.peek() <= '9' ) {
+					  j = Character.getNumericValue(exp.remove());
+					  i = (i*10) + j;
+					  
+				}
+				//System.out.println(i);
+				out.add((Integer)i);
 				
 			}else if(isOperator(c)) {
 				
@@ -175,9 +185,9 @@ public class StackCalculator {
 			}
 		
 			while(!out.isEmpty()) {
-				postfixexp += out.remove();
+				postfix.add(out.remove());
 			}
-		return postfixexp;
+		return postfix;
 	}
 	
 	private boolean isOperator(char c) {//used to check if the character is an operand
@@ -191,7 +201,7 @@ public class StackCalculator {
 	}
 	
 	
-	private boolean isLeftAssociative(char c) {
+	private boolean isLeftAssociative(char c) {//checks if an object is left associative
 		switch(c) {
 		//case '^':
 		case '%':
@@ -205,6 +215,39 @@ public class StackCalculator {
 			}
 	}
 	
+	private int toInteger(Object object) {//converts an object to an integer
+		int i;
+		if(isInteger(object)) {
+			String string = object.toString();
+    		
+    		try {
+    			i = Integer.parseInt(string);
+    			return i;
+    		} catch(Exception e) {
+    			System.out.println("ERROR: not an integer");
+    		}	
+		}
+			System.out.println("ERROR: not an integer");//if the object cannot be parsed for an integer
+			return 0;
+		
+	}
+	
+    private boolean isInteger(Object object) {//checks if an object is an integer
+    	if(object instanceof Integer) {
+    		return true;
+    	} else {
+    		String string = object.toString();
+    		
+    		try {
+    			Integer.parseInt(string);
+    		} catch(Exception e) {
+    			return false;
+    		}	
+    	}
+      
+        return true;
+    }
+    
 	private void lettervar(String s) {//adds a variable with correct syntax to the list vars
 		String cur;//current character
 		String add;//new variable to be added

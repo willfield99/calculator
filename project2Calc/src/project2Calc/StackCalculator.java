@@ -26,9 +26,9 @@ public class StackCalculator {
 		
 	}
 	
-	public int processInput(String ex) {//calculates the value of a postfix expression
+	public void processInput(String ex) {//calculates the value of a postfix expression
 		Stack<Integer> calc = new Stack<Integer>();//the stack that holds the integers
-				ArrayList<Object> input = toPostFix(ex);
+				ArrayList<String> input = toPostFix(ex);
 				int a = 0;//the first integer in the operation
 			    int b = 0;//the second integer in the operation
 			    int r = 0;//the result of the operation
@@ -36,16 +36,22 @@ public class StackCalculator {
 			 a = 0;
 			 b = 0;
 			 r = 0;
-			
+			 String c = input.get(i);//reading the next character of the expression
 		   
-		    if(isInteger(input.get(i))){
-		       Integer t = toInteger(input.get(i));
-		        calc.push(t);
+		    if(c.matches("^[+-]?\\d+$")){//checking if c is an integer
+		    try {
+		    	Integer t = Integer.parseInt(c);
+		    	calc.push(t);
+		       
+		    } catch (NumberFormatException e) {
+		      // not an integer!
+		    }
+		        
 		    }
 		   
 		    else{//each case handles a different operation, the result of the operation is pushed back to the stack
-		    	char c = (char)input.get(i);//reading the next character of the expression
-		    	switch(c) {
+		    	char x = c.charAt(0);
+		    	switch(x) {
 		    	
 		    case'+':
 		        a = calc.pop();
@@ -92,7 +98,7 @@ public class StackCalculator {
 		}
 	int ans = calc.pop();//the final element in the stack is the answer
 	
-	return ans;
+	System.out.print(ans);
 		
 	}
 
@@ -117,8 +123,8 @@ public class StackCalculator {
 	
 	
 	
-	public ArrayList<Object> toPostFix(String s) {//converts a string expression from in fix to post fix
-		ArrayList<Object> postfix = new ArrayList<Object>();//the converted postfix expression
+	public ArrayList<String> toPostFix(String s) {//converts a string expression from in fix to post fix
+		ArrayList<String> postfix = new ArrayList<String>();//the converted postfix expression
 		char c;//current character
 		
 		//Scanner in  = new Scanner(s);
@@ -132,16 +138,18 @@ public class StackCalculator {
 			while(!exp.isEmpty()) {//runs until the x
 				c = exp.remove();
 			
-			if(( c >= '0' && c <= '9' )) {//adding all numbers to out queue
-				int i = Character.getNumericValue(c);
-				int j;
-				while( exp.peek() >= '0' && exp.peek() <= '9' ) {
-					  j = Character.getNumericValue(exp.remove());
-					  i = (i*10) + j;
+			if( c >= '0' && c <= '9' ) {//adding all numbers to out queue
+				String ch = String.valueOf(c);
+			//	int i = Character.getNumericValue(c);
+				char j;
+				while(exp.peek() >= '0' && c <= exp.peek() ) {
+					  j = exp.remove();
+					  //i = (i*10) + j;
 					  
+					  ch += String.valueOf(j);
 				}
-				//System.out.println(i);
-				out.add((Integer)i);
+				
+				out.add(ch);
 				
 			}else if(isOperator(c)) {
 				
@@ -185,7 +193,8 @@ public class StackCalculator {
 			}
 		
 			while(!out.isEmpty()) {
-				postfix.add(out.remove());
+				String e = String.valueOf(out.remove());
+				postfix.add(e);
 			}
 		return postfix;
 	}
@@ -215,6 +224,7 @@ public class StackCalculator {
 			}
 	}
 	
+	/*
 	private int toInteger(Object object) {//converts an object to an integer
 		int i;
 		if(isInteger(object)) {
@@ -231,11 +241,12 @@ public class StackCalculator {
 			return 0;
 		
 	}
-	
-    private boolean isInteger(Object object) {//checks if an object is an integer
+	private boolean isInteger(Object object) {//checks if an object is an integer
+   
     	if(object instanceof Integer) {
     		return true;
     	} else {
+    	   		
     		String string = object.toString();
     		
     		try {
@@ -245,9 +256,9 @@ public class StackCalculator {
     		}	
     	}
       
-        return true;
+        return false;
     }
-    
+    */
 	private void lettervar(String s) {//adds a variable with correct syntax to the list vars
 		String cur;//current character
 		String add;//new variable to be added
@@ -259,7 +270,7 @@ public class StackCalculator {
 			cur = st.nextToken();
 			if(cur.equals("=")) {
 				add = s.substring(2);//the expression after the = sign is the value of the new variable
-				vars.add(Integer.toString(processInput(add)));//adding the value of the expression as a new variable to vars
+			//	vars.add(Integer.toString(processInput(add)));//adding the value of the expression as a new variable to vars
 					
 				
 			}else {

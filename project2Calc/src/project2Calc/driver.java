@@ -33,6 +33,7 @@ public class driver {
 		System.out.println("");
 
 		//Valid Test 2 - variable test
+		/*
 		System.out.println("Valid Test 2");
 		System.out.println("Expected output: ");
 		System.out.println("\t x is set to 5");
@@ -119,7 +120,7 @@ public class driver {
 		System.out.println("Expected output: Nonsensical Input 18 *%+ 5");
 		test.processInput("18 *%+ 5");
 		System.out.println("");
-
+*/
 	}
 
 

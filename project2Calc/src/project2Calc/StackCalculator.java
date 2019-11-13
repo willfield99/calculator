@@ -150,7 +150,8 @@ public class StackCalculator {
 				out.add(ch);
 				
 			}else if(isOperator(current)) {
-				if(current == '-') {//making negative integers			 
+			//	if(isStringOperator(out.peek()) && current == '-') {//making negative integers
+				if(current == '-') {
 						String ch = String.valueOf(current);				
 						char j;	
 						while(!exp.isEmpty() && Character.isDigit(exp.peek())) {
@@ -197,7 +198,8 @@ public class StackCalculator {
 			}
 		}
 			while(!ops.isEmpty()) {//adding rest of operator stack to output queue
-				out.add(ops.pop());
+				String as = String.valueOf(ops.pop());
+				out.add(as);
 				
 			}
 		
@@ -207,11 +209,24 @@ public class StackCalculator {
 			}
 		return postfix;
 	}
-	
+	private String charAdd(char c) {
+		String s = String.valueOf(c);
+		return s;
+	}
 	private boolean isOperator(char c) {//used to check if the character is an operand
 		Character [] goodops = {'(', ')', '^', '*', '/', '%', '+', '-'};
 		for(int i = 0; i < goodops.length; i++) {
 			if(c == goodops[i]) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean isStringOperator(String c) {//used to check if the character is an operand
+		String [] goodops = {"(", ")", "^", "*", "/", "%", "+", "-"};
+		for(int i = 0; i < goodops.length; i++) {
+			if(c.equals(goodops[i])) {
 				return true;
 			}
 		}
@@ -233,6 +248,7 @@ public class StackCalculator {
 			}
 	}
 	
+
 	/*
 	private int toInteger(Object object) {//converts an object to an integer
 		int i;

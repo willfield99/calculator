@@ -161,7 +161,7 @@ public class StackCalculator {
 						out.add(ch);
 						
 					}
-				
+				//
 			else if(ops.isEmpty() || current == '(') {//auto push if ops stack is null or c is a left parentheses
 					ops.push(current);
 					

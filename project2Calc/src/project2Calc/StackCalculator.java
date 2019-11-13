@@ -142,7 +142,7 @@ public class StackCalculator {
 				String ch = String.valueOf(c);
 			//	int i = Character.getNumericValue(c);
 				char j;
-				while(exp.peek() >= '0' && c <= exp.peek() ) {
+				while(exp.peek() >= '0' && exp.peek() <= '9' ) {
 					  j = exp.remove();
 					  //i = (i*10) + j;
 					  

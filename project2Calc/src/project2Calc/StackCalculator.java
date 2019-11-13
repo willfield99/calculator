@@ -98,7 +98,7 @@ public class StackCalculator {
 		}
 	int ans = calc.pop();//the final element in the stack is the answer
 	
-	System.out.print(ans);
+	System.out.println(ans);
 		
 	}
 
@@ -125,7 +125,7 @@ public class StackCalculator {
 	
 	public ArrayList<String> toPostFix(String s) {//converts a string expression from in fix to post fix
 		ArrayList<String> postfix = new ArrayList<String>();//the converted postfix expression
-		char c;//current character
+		char current;//current character
 		
 		//Scanner in  = new Scanner(s);
 		s = s.replaceAll("\\s","");//taking all whitespace out of the string
@@ -133,30 +133,39 @@ public class StackCalculator {
 		
 			
 		for(char ch : characters) {//adding all characters to the initial queue
+			//System.out.println(ch);
 			exp.add(ch);
 		}
 			while(!exp.isEmpty()) {//runs until the x
-				c = exp.remove();
+				current = exp.remove();
 			
-			if( c >= '0' && c <= '9' ) {//adding all numbers to out queue
-				String ch = String.valueOf(c);
-			//	int i = Character.getNumericValue(c);
-				char j;
-				while(exp.peek() >= '0' && exp.peek() <= '9' ) {
+			if(Character.isDigit(current)) {//adding all numbers to out queue			 
+				String ch = String.valueOf(current);				
+				char j;	
+				while(!exp.isEmpty() && Character.isDigit(exp.peek())) {
+					
 					  j = exp.remove();
-					  //i = (i*10) + j;
-					  
 					  ch += String.valueOf(j);
-				}
-				
+				}				
 				out.add(ch);
 				
-			}else if(isOperator(c)) {
+			}else if(isOperator(current)) {
+				if(current == '-') {//making negative integers			 
+						String ch = String.valueOf(current);				
+						char j;	
+						while(!exp.isEmpty() && Character.isDigit(exp.peek())) {
+							
+							  j = exp.remove();
+							  ch += String.valueOf(j);
+						}				
+						out.add(ch);
+						
+					}
 				
-				if(ops.isEmpty() || c == '(') {//auto push if ops stack is null or c is a left parentheses
-					ops.push(c);
+			else if(ops.isEmpty() || current == '(') {//auto push if ops stack is null or c is a left parentheses
+					ops.push(current);
 					
-				}else if(c == ')'){
+				}else if(current == ')'){
 					while(ops.peek() != '(') {//pops and pushes to output queue until finding a left parentheses
 						out.add(ops.pop());
 					}
@@ -167,11 +176,11 @@ public class StackCalculator {
 					char top = ops.peek();
 					
 					if (top == '(') {
-						ops.push(c);
+						ops.push(current);
 					}else {
 					
 					
-						while(run(c, top)) {
+						while(run(current, top)) {
 					
 						out.add(ops.pop());
 					
@@ -181,7 +190,7 @@ public class StackCalculator {
 						}
 						
 					
-					ops.push(c);//push c after running stops
+					ops.push(current);//push c after running stops
 				}
 					
 					}

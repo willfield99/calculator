@@ -1,5 +1,5 @@
 package project2Calc;
-
+//test
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -15,6 +15,7 @@ public class StackCalculator {
 	Queue<Object> out;//holds the postfix expression
 	HashMap<Character, String> var;//holds the variables
 	Precedence p;
+	boolean run;//tells the calculator to run
 	
 	public StackCalculator() {//constructor
 		ops = new Stack<Character>();
@@ -22,10 +23,12 @@ public class StackCalculator {
 		out = new LinkedList<>();
 		var = new HashMap<Character, String>(52);
 		p = new Precedence();
-		
+		run = true;
 	}
 	
 	public void processInput(String ex) {//calculates the value of a postfix expression
+		run = true;
+		
 		ex = ex.replaceAll("\\s","");//taking out whitespacce
 	
 		if (ex != null && !ex.isEmpty()) { //runs if the expression string is not empty
@@ -42,6 +45,8 @@ public class StackCalculator {
 		
 			Stack<Integer> calc = new Stack<Integer>();//the stack that holds the integers
 				ArrayList<String> input = toPostFix(ex);//input holds the postfix expression
+			if(run == true) {	
+				
 				int a = 0;//the first integer in the operation
 			    int b = 0;//the second integer in the operation
 			    int r = 0;//the result of the operation
@@ -114,6 +119,7 @@ public class StackCalculator {
 		}
 		else {//If the stack is empty print 0
 			System.out.println("0");
+		}
 		}
 		}
 		}else {//prints 0 if the expression string is empty
@@ -312,17 +318,21 @@ public class StackCalculator {
 				
 			}
 		
-			while(!out.isEmpty()) {
+			while(!out.isEmpty() && run == true) {
 				String e = String.valueOf(out.remove());
 				if(!e.equals("(") && !e.contentEquals(")")){
 				postfix.add(e);
-				}else if(e.equals("(")) {
-					System.out.println("Unbalanced Parentheses Error, Too Many Left Parentheses");
 				}else if(e.equals(")")) {
-					System.out.println("Unbalanced Parentheses Error, Too Many Right Parentheses");
+					System.out.println("Unbalanced Parentheses Error, Mismatched Parentheses");
+					run = false;
 				}
 				}
-			
+			for(String c: postfix) {
+				if(c.equals("(")) {
+					System.out.println("Unbalanced Parentheses Error, Too Many Left Parentheses");
+					run = false;
+				}
+			}
 		return postfix;
 	}
 	

@@ -27,6 +27,8 @@ public class StackCalculator {
 	
 	public void processInput(String ex) {//calculates the value of a postfix expression
 		ex = ex.replaceAll("\\s","");//taking out whitespacce
+	
+		if (ex != null && !ex.isEmpty()) { //runs if the expression string is not empty
 		
 		if(Character.isLetter(ex.charAt(0)) && ex.charAt(1) == '=') {//assigning variables and inserting them into the map var
 		
@@ -106,10 +108,16 @@ public class StackCalculator {
 		    }
 		}
 		}
-		
-	int ans = calc.pop();//the final element in the stack is the answer
-	
-	System.out.println(ans);
+		if(!calc.isEmpty()) {
+			int ans = calc.pop();//the final element in the stack is the answer
+			System.out.println(ans);
+		}
+		else {//If the stack is empty print 0
+			System.out.println("0");
+		}
+		}
+		}else {//prints 0 if the expression string is empty
+			System.out.println("0");
 		}
 	}
 	

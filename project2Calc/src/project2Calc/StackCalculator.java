@@ -349,12 +349,7 @@ public class StackCalculator {
 		
 		return s;
 	}
-	
-	private String charAdd(char c) {//adds a character as a string
-		String s = String.valueOf(c);
-		return s;
-	}
-	
+		
 	private boolean isOperator(char c) {//used to check if the character is an operand
 		Character [] goodops = {'(', ')', '^', '*', '/', '%', '+', '-'};
 		for(int i = 0; i < goodops.length; i++) {
@@ -364,17 +359,6 @@ public class StackCalculator {
 		}
 		return false;
 	}
-	
-	private boolean isStringOperator(String c) {//used to check if the character is an operand
-		String [] goodops = {"(", ")", "^", "*", "/", "%", "+", "-"};
-		for(int i = 0; i < goodops.length; i++) {
-			if(c.equals(goodops[i])) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	
 	private boolean isLeftAssociative(char c) {//checks if an object is left associative
 		switch(c) {

@@ -1,6 +1,7 @@
 package project2Calc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -11,24 +12,33 @@ public class StackCalculator {
 
 	Stack<Character> ops;//holds the operators
 	Queue<Character> exp;//expression is read into this queue
-	
 	StringTokenizer st;//tokenizes the strings from the expression queue
 	Queue<Object> out;//holds the postfix expression
-	ArrayList<String> vars;//holds the declared variables
+	HashMap<Character, String> var;//holds the variables
 	Precedence p;
 	
 	public StackCalculator() {//constructor
 		ops = new Stack<Character>();
 		exp = new LinkedList<Character>();
 		out = new LinkedList<>();
-		vars = new ArrayList<>();
+		var = new HashMap<Character, String>(52);
 		p = new Precedence();
 		
 	}
 	
 	public void processInput(String ex) {//calculates the value of a postfix expression
-		Stack<Integer> calc = new Stack<Integer>();//the stack that holds the integers
-				ArrayList<String> input = toPostFix(ex);
+
+		if(Character.isLetter(ex.charAt(0)) && ex.charAt(1) == '=') {//assigning variables and inserting them into the map var
+		
+			char key = ex.charAt(0);//the key of the value
+			String val = processNewVariable(ex.substring(2));//the value to be stored
+			var.put(key, val);
+		}
+		
+		else {//otherwise process the input as an expression
+		
+			Stack<Integer> calc = new Stack<Integer>();//the stack that holds the integers
+				ArrayList<String> input = toPostFix(ex);//input holds the postfix expression
 				int a = 0;//the first integer in the operation
 			    int b = 0;//the second integer in the operation
 			    int r = 0;//the result of the operation
@@ -38,15 +48,14 @@ public class StackCalculator {
 			 r = 0;
 			 String c = input.get(i);//reading the next character of the expression
 		   
-		    if(c.matches("^[+-]?\\d+$")){//checking if c is an integer
+		    if(c.matches("^[+-]?\\d+$")){//checking if c is an integer, all integers get pushed to the stack
 		    try {
 		    	Integer t = Integer.parseInt(c);
-		    	calc.push(t);
+		    	calc.push(t);//all integers get pushed to the stack
 		       
 		    } catch (NumberFormatException e) {
 		      // not an integer!
-		    }
-		        
+		    }		        
 		    }
 		   
 		    else{//each case handles a different operation, the result of the operation is pushed back to the stack
@@ -96,13 +105,89 @@ public class StackCalculator {
 		    }
 		}
 		}
+		
 	int ans = calc.pop();//the final element in the stack is the answer
 	
 	System.out.println(ans);
+		}
+	}
+	
+	public String processNewVariable(String ex) {//calculates the value of a postfix expression when creating a new variable
+		//this method returns a string instead of printing out the answer
+		Stack<Integer> calc = new Stack<Integer>();//the stack that holds the integers
+				ArrayList<String> input = toPostFix(ex);
+				int a = 0;//the first integer in the operation
+			    int b = 0;//the second integer in the operation
+			    int r = 0;//the result of the operation
+		for(int i = 0; i < input.size(); i++){
+			 a = 0;
+			 b = 0;
+			 r = 0;
+			 String c = input.get(i);//reading the next character of the expression
+		   
+		    if(c.matches("^[+-]?\\d+$")){//checking if c is an integer
+		    try {
+		    	Integer t = Integer.parseInt(c);
+		    	calc.push(t);
+		       
+		    } catch (NumberFormatException e) {
+		      // not an integer!
+		    }		        
+		    }
+		   
+		    else{//each case handles a different operation, the result of the operation is pushed back to the stack
+		    	char x = c.charAt(0);
+		    	switch(x) {
+		    	
+		    case'+':
+		        a = calc.pop();
+		        b = calc.pop();
+		        r = b+a;
+		        calc.push(r);
+		        break;
+		    case'-':
+		        a = calc.pop();
+		        b = calc.pop();
+		        r = b - a;
+		        calc.push(r);
+		        break;
+		    case'*':
+		        a = calc.pop();
+		        b = calc.pop();
+		        r = b*a;
+		        calc.push(r);
+		        break;
+		    case '/':
+		        a = calc.pop();
+		        b = calc.pop();
+		        r = b / a;
+		        calc.push(r);
+		        break;
+		    case'%':
+		        a = calc.pop();
+		        b = calc.pop();
+		        r = b % a;
+		        calc.push(r);
+		        break;
+		    case'^':
+		        a = calc.pop();
+		        b = calc.pop();
+		        r = b^a;
+		        calc.push(r);
+		        break;
+		     
+		     default:
+		    	 System.out.println("Error at processInput switch");
+		    	 break;
+		    }
+		}
+		}
+	String ans = String.valueOf(calc.pop());//the final element in the stack is the answer
+	
+	return ans;
 		
 	}
 
-		
 	public boolean run(char i, char s) {//see below
 		/*
 		 * run is used to check if operator stack should pop before pushing the current character
@@ -124,33 +209,43 @@ public class StackCalculator {
 	
 	
 	public ArrayList<String> toPostFix(String s) {//converts a string expression from in fix to post fix
+		
 		ArrayList<String> postfix = new ArrayList<String>();//the converted postfix expression
 		char current;//current character
-		
-		//Scanner in  = new Scanner(s);
 		s = s.replaceAll("\\s","");//taking all whitespace out of the string
 		char [] characters = s.toCharArray();//holds all the characters in the expression
 		
-			
 		for(char ch : characters) {//adding all characters to the initial queue
 			//System.out.println(ch);
 			exp.add(ch);
 		}
-			while(!exp.isEmpty()) {//runs until the x
+		
+			while(!exp.isEmpty()) {//runs until the exp queue is empty
 				current = exp.remove();
 			
-			if(Character.isDigit(current)) {//adding all numbers to out queue			 
+			if(Character.isLetter(current)){//converting variables to their numeric values
+				
+				String value = var.get(current);
+				if(value.equals(null)) {
+					System.out.println("Undefined variable " + current);
+				}else {
+					out.add(value);
+				}
+				
+			}else if(Character.isDigit(current)) {//adding all numbers to out queue			 
 				String ch = String.valueOf(current);				
 				char j;	
-				while(!exp.isEmpty() && Character.isDigit(exp.peek())) {
+				while(!exp.isEmpty() && Character.isDigit(exp.peek())) {//combining multi digit numbers into a string
 					
 					  j = exp.remove();
 					  ch += String.valueOf(j);
 				}				
-				out.add(ch);
+				out.add(ch);//adding to out queue
 				
 			}else if(isOperator(current)) {
-			//	if(isStringOperator(out.peek()) && current == '-') {//making negative integers
+			//if(current == '-' && !exp.isEmpty() && exp.peek() == '-') {
+			//	current = '+';
+			
 				if(current == '-') {
 						String ch = String.valueOf(current);				
 						char j;	
@@ -162,7 +257,7 @@ public class StackCalculator {
 						out.add(ch);
 						
 					}
-				//
+				
 			else if(ops.isEmpty() || current == '(') {//auto push if ops stack is null or c is a left parentheses
 					ops.push(current);
 					
@@ -209,10 +304,12 @@ public class StackCalculator {
 			}
 		return postfix;
 	}
-	private String charAdd(char c) {
+	
+	private String charAdd(char c) {//adds a character as a string
 		String s = String.valueOf(c);
 		return s;
 	}
+	
 	private boolean isOperator(char c) {//used to check if the character is an operand
 		Character [] goodops = {'(', ')', '^', '*', '/', '%', '+', '-'};
 		for(int i = 0; i < goodops.length; i++) {
@@ -247,68 +344,7 @@ public class StackCalculator {
 			return false;
 			}
 	}
-	
-
-	/*
-	private int toInteger(Object object) {//converts an object to an integer
-		int i;
-		if(isInteger(object)) {
-			String string = object.toString();
-    		
-    		try {
-    			i = Integer.parseInt(string);
-    			return i;
-    		} catch(Exception e) {
-    			System.out.println("ERROR: not an integer");
-    		}	
-		}
-			System.out.println("ERROR: not an integer");//if the object cannot be parsed for an integer
-			return 0;
-		
-	}
-	private boolean isInteger(Object object) {//checks if an object is an integer
-   
-    	if(object instanceof Integer) {
-    		return true;
-    	} else {
-    	   		
-    		String string = object.toString();
-    		
-    		try {
-    			Integer.parseInt(string);
-    		} catch(Exception e) {
-    			return false;
-    		}	
-    	}
-      
-        return false;
-    }
-    */
-	private void lettervar(String s) {//adds a variable with correct syntax to the list vars
-		String cur;//current character
-		String add;//new variable to be added
-		st = new StringTokenizer(s);
-		cur = st.nextToken();
-		
-		if(Character.isLetter(cur.charAt(0))) {//checking that first character is a valid variable name
-			add = cur;
-			cur = st.nextToken();
-			if(cur.equals("=")) {
-				add = s.substring(2);//the expression after the = sign is the value of the new variable
-			//	vars.add(Integer.toString(processInput(add)));//adding the value of the expression as a new variable to vars
-					
-				
-			}else {
-				//not a valid variable initialization
-			}
-					
-					
-		}else {
-			//not a valid variable name
-		}
 			
-		
 	}
 	
 	
-}

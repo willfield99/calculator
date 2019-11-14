@@ -97,7 +97,7 @@ public class StackCalculator {
 		    case'^':
 		        a = calc.pop();
 		        b = calc.pop();
-		        r = b^a;
+		        r = (int) Math.pow(b, a);
 		        calc.push(r);
 		        break;
 		     
@@ -216,23 +216,8 @@ public class StackCalculator {
 		ArrayList<String> postfix = new ArrayList<String>();//the converted postfix expression
 		char current;//current character
 		s = s.replaceAll("\\s","");//taking all whitespace out of the string
+		s = cleanString(s);
 		
-		for(int i = 0; i < s.length(); i++) {
-			if(i > 0) {
-				if(s.charAt(i - 1) == '-' && s.charAt(i) == '-') {
-					String pre = s.substring(0, i - 1);
-					String post = s.substring(i + 1);
-					s = pre + "+" + post;
-					System.out.println(s);
-				}else if(s.charAt(i - 1) == '*' && s.charAt(i) == '*') {
-					String pre = s.substring(0, i - 1);
-					String post = s.substring(i + 1);
-					s = pre + "^" + post;
-					System.out.println(s);
-				}
-				
-			}
-		}
 		char [] characters = s.toCharArray();//holds all the characters in the expression
 		
 		for(char ch : characters) {//adding all characters to the initial queue
@@ -265,7 +250,7 @@ public class StackCalculator {
 				
 			}
 			else if(isOperator(current)) {
-				if(isOperator(characters[count - 1]) && current == '-') {
+				if(current == '-' && isOperator(characters[count - 1])) {
 						String ch = String.valueOf(current);				
 						char j;	
 						while(!exp.isEmpty() && Character.isDigit(exp.peek())) {
@@ -323,6 +308,38 @@ public class StackCalculator {
 				postfix.add(e);
 			}
 		return postfix;
+	}
+	
+	private String cleanString(String s) {//takes out double asterisks, double subtraction signs, '{', '[', ']', '}'
+
+		for(int i = 0; i < s.length(); i++) {
+			if(i > 0) {
+				if(s.charAt(i - 1) == '-' && s.charAt(i) == '-') {
+					String pre = s.substring(0, i - 1);
+					String post = s.substring(i + 1);
+					s = pre + "+" + post;				
+				}else if(s.charAt(i - 1) == '*' && s.charAt(i) == '*') {
+					String pre = s.substring(0, i - 1);
+					String post = s.substring(i + 1);
+					s = pre + "^" + post;
+				}
+				
+			}
+		}
+		
+		for(int i = 0; i < s.length(); i++) {
+			if(s.charAt(i) == '{' || s.charAt(i) == '[') {
+				String pre = s.substring(0, i);
+				String post = s.substring(i + 1);
+				s = pre + "(" + post;
+			}else if(s.charAt(i) == '}' || s.charAt(i) == ']') {
+				String pre = s.substring(0, i);
+				String post = s.substring(i + 1);
+				s = pre + ")" + post;
+			}
+		}
+		
+		return s;
 	}
 	
 	private String charAdd(char c) {//adds a character as a string

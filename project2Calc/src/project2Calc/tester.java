@@ -6,12 +6,15 @@ public static void main (String[] args) {
 	StackCalculator test = new StackCalculator();
 	//String s = "((15 / (7 - (1 + 1))) * 3) - (2 + (1 + 1))";
 	//System.out.println(calc.toPostFix(s));
-	test.processInput("x = 5");
-	test.processInput("x * 6");
-	test.processInput("x = 1    2%x * 3 + 12 - 4 + 2**5");
-	test.processInput("33 * x + 4");
-	test.processInput("y=  8 + 4 - x *2");
-	test.processInput("12 * y");
+	System.out.println("Expected output:");
+	System.out.println("\t 40");
+	System.out.println("\t -12");
+	System.out.println("\t 10");
+	System.out.println("\t 5");
+	test.processInput("--40");
+	test.processInput("---12");
+	test.processInput("10");
+	test.processInput("10 + ---5");
 	}
 	
 	

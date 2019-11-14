@@ -121,8 +121,9 @@ public class StackCalculator {
 		}
 	}
 	
-	public String processNewVariable(String ex) {//calculates the value of a postfix expression when creating a new variable
+	public String processNewVariable(String ex) {//calculates the value of an expression when creating a new variable 
 		//this method returns a string instead of printing out the answer
+		
 		Stack<Integer> calc = new Stack<Integer>();//the stack that holds the integers
 				ArrayList<String> input = toPostFix(ex);
 				int a = 0;//the first integer in the operation
@@ -313,8 +314,15 @@ public class StackCalculator {
 		
 			while(!out.isEmpty()) {
 				String e = String.valueOf(out.remove());
+				if(!e.equals("(") && !e.contentEquals(")")){
 				postfix.add(e);
-			}
+				}else if(e.equals("(")) {
+					System.out.println("Unbalanced Parentheses Error, Too Many Left Parentheses");
+				}else if(e.equals(")")) {
+					System.out.println("Unbalanced Parentheses Error, Too Many Right Parentheses");
+				}
+				}
+			
 		return postfix;
 	}
 	

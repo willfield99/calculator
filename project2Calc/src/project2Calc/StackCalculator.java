@@ -27,12 +27,14 @@ public class StackCalculator {
 	}
 	
 	public void processInput(String ex) {//calculates the value of a postfix expression
-
+		ex = ex.replaceAll("\\s","");//taking out whitespacce
+		
 		if(Character.isLetter(ex.charAt(0)) && ex.charAt(1) == '=') {//assigning variables and inserting them into the map var
 		
 			char key = ex.charAt(0);//the key of the value
 			String val = processNewVariable(ex.substring(2));//the value to be stored
 			var.put(key, val);
+			System.out.println(key + " is set to " + val);
 		}
 		
 		else {//otherwise process the input as an expression
@@ -172,7 +174,7 @@ public class StackCalculator {
 		    case'^':
 		        a = calc.pop();
 		        b = calc.pop();
-		        r = b^a;
+		        r = (int)Math.pow(b, a);
 		        calc.push(r);
 		        break;
 		     
@@ -209,20 +211,38 @@ public class StackCalculator {
 	
 	
 	public ArrayList<String> toPostFix(String s) {//converts a string expression from in fix to post fix
-		
+		int count = -1; //where the algorithm is at in the char array, starts at -1 one so that the 
+						//first time count increments its at the 0 element of the characters array
 		ArrayList<String> postfix = new ArrayList<String>();//the converted postfix expression
 		char current;//current character
 		s = s.replaceAll("\\s","");//taking all whitespace out of the string
+		
+		for(int i = 0; i < s.length(); i++) {
+			if(i > 0) {
+				if(s.charAt(i - 1) == '-' && s.charAt(i) == '-') {
+					String pre = s.substring(0, i - 1);
+					String post = s.substring(i + 1);
+					s = pre + "+" + post;
+					System.out.println(s);
+				}else if(s.charAt(i - 1) == '*' && s.charAt(i) == '*') {
+					String pre = s.substring(0, i - 1);
+					String post = s.substring(i + 1);
+					s = pre + "^" + post;
+					System.out.println(s);
+				}
+				
+			}
+		}
 		char [] characters = s.toCharArray();//holds all the characters in the expression
 		
 		for(char ch : characters) {//adding all characters to the initial queue
-			//System.out.println(ch);
 			exp.add(ch);
 		}
 		
 			while(!exp.isEmpty()) {//runs until the exp queue is empty
 				current = exp.remove();
-			
+				count++;
+				
 			if(Character.isLetter(current)){//converting variables to their numeric values
 				
 				String value = var.get(current);
@@ -238,20 +258,20 @@ public class StackCalculator {
 				while(!exp.isEmpty() && Character.isDigit(exp.peek())) {//combining multi digit numbers into a string
 					
 					  j = exp.remove();
+					  count++;
 					  ch += String.valueOf(j);
 				}				
 				out.add(ch);//adding to out queue
 				
-			}else if(isOperator(current)) {
-			//if(current == '-' && !exp.isEmpty() && exp.peek() == '-') {
-			//	current = '+';
-			
-				if(current == '-') {
+			}
+			else if(isOperator(current)) {
+				if(isOperator(characters[count - 1]) && current == '-') {
 						String ch = String.valueOf(current);				
 						char j;	
 						while(!exp.isEmpty() && Character.isDigit(exp.peek())) {
 							
 							  j = exp.remove();
+							  count++;
 							  ch += String.valueOf(j);
 						}				
 						out.add(ch);

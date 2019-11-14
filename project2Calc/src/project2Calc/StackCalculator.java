@@ -250,7 +250,8 @@ public class StackCalculator {
 				
 			}
 			else if(isOperator(current)) {
-				if(current == '-' && isOperator(characters[count - 1])) {
+				if(count == 0 && current == '-' || (current == '-' && isOperator(characters[count - 1]))) {//creates a string to represent a negative integer when
+																											//there is a negative sign at the start of expression or after another operator
 						String ch = String.valueOf(current);				
 						char j;	
 						while(!exp.isEmpty() && Character.isDigit(exp.peek())) {
@@ -317,7 +318,7 @@ public class StackCalculator {
 				if(s.charAt(i - 1) == '-' && s.charAt(i) == '-') {
 					String pre = s.substring(0, i - 1);
 					String post = s.substring(i + 1);
-					s = pre + "+" + post;				
+					s = pre + post;				
 				}else if(s.charAt(i - 1) == '*' && s.charAt(i) == '*') {
 					String pre = s.substring(0, i - 1);
 					String post = s.substring(i + 1);

@@ -222,7 +222,64 @@ public class StackCalculator {
 		return false;
 	}
 	
-	
+	public boolean checkString(String s) {//checks the string for proper formatting before putting it into the postfix algorithm
+		int p, b, c;
+		p = b = c = 0;
+		char [] characters = s.toCharArray();
+		Stack<Character> balance = new Stack<Character>();
+				
+		for(char character: characters) {
+			
+			if(!Character.isDigit(character) && !Character.isLetter(character)) {
+				if(!isOperator(character)) {
+					System.out.println("Invalid Symbol" + character);
+					return false;
+					}else if(isOperator(character)) {
+						switch(character) {
+						case '(':
+							p ++;
+							balance.push(character);
+						case ')':
+							p--;
+							if(balance.pop() != '(') {
+								System.out.println("Unbalanced Parentheses Error, Mismatched Parentheses");
+								return false;
+							}
+						case '[':
+							b ++;
+							balance.push(character);
+						case ']':
+							b --;
+							if(balance.pop() != '[') {
+								System.out.println("Unbalanced Parentheses Error, Mismatched Parentheses");
+								return false;
+							}
+						case '{':
+							c ++;
+							balance.push(character);
+						case '}':
+							c --;
+							if(balance.pop() != '{') {
+								System.out.println("Unbalanced Parentheses Error, Mismatched Parentheses");
+								return false;
+							}
+						}
+					}
+			}
+			
+		}
+		
+		
+		
+		if (p > 0 || b > 0 || c > 0) {//if there are more left than right parentheses at the end of the loop
+			System.out.println("Unbalanced Parentheses Error, Too Many Left Parentheses");
+			return false;
+		}if (p < 0 || b < 0 || c < 0) {//if there are more left than right parentheses at the end of the loop
+			System.out.println("Unbalanced Parentheses Error, Too Many Right Parentheses");
+			return false;
+		}
+		return true;
+	}
 	
 	public ArrayList<String> toPostFix(String s) {//converts a string expression from in fix to post fix
 		int count = -1; //where the algorithm is at in the char array, starts at -1 one so that the 
@@ -230,10 +287,13 @@ public class StackCalculator {
 		ArrayList<String> postfix = new ArrayList<String>();//the converted postfix expression
 		char current;//current character
 		s = s.replaceAll("\\s","");//taking all whitespace out of the string
-		s = cleanString(s);
 		
-		char [] characters = s.toCharArray();//holds all the characters in the expression
 		
+		if(checkString(s)) {//checking the strings format
+			
+			s = cleanString(s);
+			char [] characters = s.toCharArray();//holds all the characters in the expression
+			
 		for(char ch : characters) {//adding all characters to the initial queue
 			exp.add(ch);
 		}
@@ -322,7 +382,15 @@ public class StackCalculator {
 				String e = String.valueOf(out.remove());
 				if(!e.equals("(") && !e.contentEquals(")")){
 				postfix.add(e);
-				}else if(e.equals(")")) {
+				}
+			}
+			return postfix;
+		}
+		run = false;
+		return postfix;
+	}
+	/*
+	 * else if(e.equals(")")) {
 					System.out.println("Unbalanced Parentheses Error, Mismatched Parentheses");
 					run = false;
 				}
@@ -332,10 +400,7 @@ public class StackCalculator {
 					System.out.println("Unbalanced Parentheses Error, Too Many Left Parentheses");
 					run = false;
 				}
-			}
-		return postfix;
-	}
-	
+	 */
 	private String cleanString(String s) {//takes out double asterisks, double subtraction signs, '{', '[', ']', '}'
 
 		for(int i = 0; i < s.length(); i++) {
@@ -369,7 +434,7 @@ public class StackCalculator {
 	}
 		
 	private boolean isOperator(char c) {//used to check if the character is an operand
-		Character [] goodops = {'(', ')', '^', '*', '/', '%', '+', '-'};
+		Character [] goodops = {'{', '}', '[', ']', '(', ')', '^', '*', '/', '%', '+', '-'};
 		for(int i = 0; i < goodops.length; i++) {
 			if(c == goodops[i]) {
 				return true;

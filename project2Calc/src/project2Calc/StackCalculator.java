@@ -229,11 +229,13 @@ public class StackCalculator {
 		Stack<Character> balance = new Stack<Character>();
 				
 		for(char character: characters) {
-			/*if (p > 0 || b > 0 || c > 0) {//if there are more left than right parentheses at the end of the loop
-				System.out.println("Unbalanced Parentheses Error, Too Many Left Parentheses");
-				return false;
-			}*/
-			if(!Character.isDigit(character) && !Character.isLetter(character)) {
+			if(Character.isLetter(character)) {
+				String value = var.get(character);
+				if(value.isEmpty()) {
+					System.out.println("Undefined variable " + character);
+					return false;
+				}
+			}else if(!Character.isDigit(character) && !Character.isLetter(character)) {
 				if(!isOperator(character)) {
 					System.out.println("Invalid Symbol" + character);
 					return false;
@@ -242,34 +244,48 @@ public class StackCalculator {
 						case '(':
 							p ++;
 							balance.push(character);
+							break;
 						case ')':
 							p--;
-							if(balance.pop() != '(' ||balance.pop() != ')') {
+							if(balance.isEmpty() || balance.pop() != '(') {
 								System.out.println("Unbalanced Parentheses Error, Mismatched Parentheses");
 								return false;
 							}
+							break;
 						case '[':
 							b ++;
 							balance.push(character);
+							break;
 						case ']':
 							b --;
-							if(balance.pop() != '[') {
+							if(balance.isEmpty() || balance.pop() != '[') {
 								System.out.println("Unbalanced Parentheses Error, Mismatched Parentheses");
 								return false;
 							}
+							break;
 						case '{':
 							c ++;
 							balance.push(character);
+							break;
 						case '}':
 							c --;
-							if(balance.pop() != '{') {
+							if(balance.isEmpty() || balance.pop() != '{') {
 								System.out.println("Unbalanced Parentheses Error, Mismatched Parentheses");
 								return false;
 							}
+								break;
+							default:
+		
+							}
+						
 						}
 					}
-			}
+				}
+		if (p > 0 || b > 0 || c > 0) {//if there are more left than right parentheses at the end of the loop
+			System.out.println("Unbalanced Parentheses Error, Too Many Left Parentheses");
+			return false;
 		}
+		
 		return true;
 	}
 	

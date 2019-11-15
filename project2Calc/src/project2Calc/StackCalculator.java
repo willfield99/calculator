@@ -229,7 +229,10 @@ public class StackCalculator {
 		Stack<Character> balance = new Stack<Character>();
 				
 		for(char character: characters) {
-			
+			/*if (p > 0 || b > 0 || c > 0) {//if there are more left than right parentheses at the end of the loop
+				System.out.println("Unbalanced Parentheses Error, Too Many Left Parentheses");
+				return false;
+			}*/
 			if(!Character.isDigit(character) && !Character.isLetter(character)) {
 				if(!isOperator(character)) {
 					System.out.println("Invalid Symbol" + character);
@@ -241,7 +244,7 @@ public class StackCalculator {
 							balance.push(character);
 						case ')':
 							p--;
-							if(balance.pop() != '(') {
+							if(balance.pop() != '(' ||balance.pop() != ')') {
 								System.out.println("Unbalanced Parentheses Error, Mismatched Parentheses");
 								return false;
 							}
@@ -266,17 +269,6 @@ public class StackCalculator {
 						}
 					}
 			}
-			
-		}
-		
-		
-		
-		if (p > 0 || b > 0 || c > 0) {//if there are more left than right parentheses at the end of the loop
-			System.out.println("Unbalanced Parentheses Error, Too Many Left Parentheses");
-			return false;
-		}if (p < 0 || b < 0 || c < 0) {//if there are more left than right parentheses at the end of the loop
-			System.out.println("Unbalanced Parentheses Error, Too Many Right Parentheses");
-			return false;
 		}
 		return true;
 	}

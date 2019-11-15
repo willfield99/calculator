@@ -230,21 +230,35 @@ public class StackCalculator {
 		int i = 0;//index of the for loop
 				
 		for(char character: characters) {
-			if(Character.isLetter(character)) {//if character
+			if(Character.isLetter(character)) {
 				String value = var.get(character);
 				
-				if(i < characters.length && value == null && Character.isLetter(characters[i + 1])) {
-					System.out.println("Invalid Variable Name " + s.substring(i, i + 2));
+				if(i < characters.length && value == null && Character.isLetter(characters[i + 1])) {//handles variable names longer than 1 letter in length
+					int j = i + 1;
+					
+					while(j < characters.length && Character.isLetter(characters[j])) {
+						j ++;
+					}
+					System.out.println("Invalid Variable Name " + s.substring(i, j));
 					return false;
 				}else if(value == null) {
 					System.out.println("Undefined Variable " + character);
 					return false;
 				}
-			}else if(!Character.isDigit(character) && !Character.isLetter(character)) {
-				if(!isOperator(character)) {
-					System.out.println("Invalid Symbol" + character);
-					return false;
-					}else if(isOperator(character)) {
+				}else if(!Character.isDigit(character) && !Character.isLetter(character)) {
+					if(!isOperator(character)) {//handles invalid symbols
+						System.out.println("Invalid Symbol" + character);
+						return false;
+					}
+					/*
+					else if(i < characters.length && isOperator(character) && isOperator(characters[i +1])) {//handling nonsensical input
+						System.out.println("Nonsensical Input " + s);
+						
+					}*/
+				
+				
+				
+				else if(isOperator(character)) {//handling mismatched parentheses
 						switch(character) {
 						case '(':
 							p ++;

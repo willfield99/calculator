@@ -223,16 +223,20 @@ public class StackCalculator {
 	}
 	
 	public boolean checkString(String s) {//checks the string for proper formatting before putting it into the postfix algorithm
-		int p, b, c;
+		int p, b, c;//represent parentheses, brackets, and curly brackets
 		p = b = c = 0;
 		char [] characters = s.toCharArray();
-		Stack<Character> balance = new Stack<Character>();
+		Stack<Character> balance = new Stack<Character>();//used to check if parentheses are mismatched
+		int i = 0;//index of the for loop
 				
 		for(char character: characters) {
 			if(Character.isLetter(character)) {//if character
 				String value = var.get(character);
 				if(value.isEmpty()) {
-					System.out.println("Undefined variable " + character);
+					System.out.println("Undefined Variable " + character);
+					return false;
+				}else if(i > 0 && Character.isLetter(characters[i-1])) {
+					System.out.println("Invalid Variable Name " + s.substring(i - 1, i + 1));
 					return false;
 				}
 			}else if(!Character.isDigit(character) && !Character.isLetter(character)) {
@@ -280,6 +284,7 @@ public class StackCalculator {
 						
 						}
 					}
+			i++;
 				}
 		if (p > 0 || b > 0 || c > 0) {//if there are more left than right parentheses at the end of the loop
 			System.out.println("Unbalanced Parentheses Error, Too Many Left Parentheses");
@@ -388,27 +393,16 @@ public class StackCalculator {
 		
 			while(!out.isEmpty() && run == true) {
 				String e = String.valueOf(out.remove());
-				if(!e.equals("(") && !e.contentEquals(")")){
+				//if(!e.equals("(") && !e.contentEquals(")")){
 				postfix.add(e);
-				}
+				//}
 			}
 			return postfix;
 		}
 		run = false;
 		return postfix;
 	}
-	/*
-	 * else if(e.equals(")")) {
-					System.out.println("Unbalanced Parentheses Error, Mismatched Parentheses");
-					run = false;
-				}
-				}
-			for(String c: postfix) {
-				if(c.equals("(")) {
-					System.out.println("Unbalanced Parentheses Error, Too Many Left Parentheses");
-					run = false;
-				}
-	 */
+	
 	private String cleanString(String s) {//takes out double asterisks, double subtraction signs, '{', '[', ']', '}'
 
 		for(int i = 0; i < s.length(); i++) {

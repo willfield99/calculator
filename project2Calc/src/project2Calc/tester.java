@@ -4,14 +4,12 @@ public class tester {
 public static void main (String[] args) {
 	
 	StackCalculator test = new StackCalculator();
-	System.out.println("Error Test 1");
-	System.out.println("Expected output: Unbalanced Parentheses Error, Too Many Left Parentheses");
-	test.processInput("((())())(((()))");
-	System.out.println("Expected output: Unbalanced Parentheses Error, Mismatched Parentheses");
-	test.processInput(")(");
-	System.out.println("Expected output: Unbalanced Parentheses Error, Mismatched Parentheses");
-	test.processInput("([)]");
+	
+	System.out.println("Error Test 2");
+	System.out.println("Expected output: Undefined Variable Y");
+	test.processInput("Y + 6 * 12 ** 3");
 	System.out.println("");
+
 	
 	}
 	

@@ -229,7 +229,7 @@ public class StackCalculator {
 		Stack<Character> balance = new Stack<Character>();
 				
 		for(char character: characters) {
-			if(Character.isLetter(character)) {
+			if(Character.isLetter(character)) {//if character
 				String value = var.get(character);
 				if(value.isEmpty()) {
 					System.out.println("Undefined variable " + character);

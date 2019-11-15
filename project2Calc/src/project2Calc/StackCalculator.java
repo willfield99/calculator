@@ -127,7 +127,7 @@ public class StackCalculator {
 		}
 	}
 	
-	public String processNewVariable(String ex) {//calculates the value of an expression when creating a new variable 
+	private String processNewVariable(String ex) {//calculates the value of an expression when creating a new variable 
 		//this method returns a string instead of printing out the answer
 		
 		Stack<Integer> calc = new Stack<Integer>();//the stack that holds the integers
@@ -204,7 +204,7 @@ public class StackCalculator {
 		
 	}
 
-	public boolean run(char i, char s) {//see below
+	private boolean run(char i, char s) {//see below
 		/*
 		 * run is used to check if operator stack should pop before pushing the current character
 		 * char i is the current token from the expression queue
@@ -222,7 +222,7 @@ public class StackCalculator {
 		return false;
 	}
 	
-	public boolean checkString(String s) {//checks the string for proper formatting before putting it into the postfix algorithm
+	private boolean checkString(String s) {//checks the string for proper formatting before putting it into the postfix algorithm
 		int p, b, c;//represent parentheses, brackets, and curly brackets
 		p = b = c = 0;
 		char [] characters = s.toCharArray();
@@ -250,14 +250,7 @@ public class StackCalculator {
 						System.out.println("Invalid Symbol" + character);
 						return false;
 					}
-					/*
-					else if(i < characters.length && isOperator(character) && isOperator(characters[i +1])) {//handling nonsensical input
-						System.out.println("Nonsensical Input " + s);
-						
-					}*/
-				
-				
-				
+					
 				else if(isOperator(character)) {//handling mismatched parentheses
 						switch(character) {
 						case '(':
@@ -309,18 +302,43 @@ public class StackCalculator {
 		return true;
 	}
 	
-	public ArrayList<String> toPostFix(String s) {//converts a string expression from in fix to post fix
+	private boolean checkNonsensical(String s) {//handling nonsensical input
+		char [] characters = s.toCharArray();
+		Queue<Character> expression = new LinkedList<Character>();
+		char current;
+		for(char ch : characters) {//adding all characters to the initial queue
+			expression.add(ch);
+		}
+		int count = 0;
+		while(!expression.isEmpty()) {
+			current = expression.remove();
+			if(isOperator(current) && current != '(' && current != ')' && !(current == '-' && !isOperator(expression.peek()))) {
+				count ++;
+				if(count > 1) {
+					System.out.println("Nonsensical Input " + s);
+					return false;
+				}
+			}else if(current == '(' || current == ')' || !isOperator(current)) {
+				count = 0;
+			}
+		}
+		
+		return true;
+	}
+	
+	
+	private ArrayList<String> toPostFix(String s) {//converts a string expression from in fix to post fix
 		int count = -1; //where the algorithm is at in the char array, starts at -1 one so that the 
 						//first time count increments its at the 0 element of the characters array
 		ArrayList<String> postfix = new ArrayList<String>();//the converted postfix expression
 		char current;//current character
 		s = s.replaceAll("\\s","");//taking all whitespace out of the string
 		
-		
 		if(checkString(s)) {//checking the strings format
-			
 			s = cleanString(s);
 			char [] characters = s.toCharArray();//holds all the characters in the expression
+			
+		if(checkNonsensical(s)) {
 			
 		for(char ch : characters) {//adding all characters to the initial queue
 			exp.add(ch);
@@ -416,6 +434,9 @@ public class StackCalculator {
 		}
 		run = false;
 		return postfix;
+		}
+		run = false;
+		return postfix;
 	}
 	
 	private String cleanString(String s) {//takes out double asterisks, double subtraction signs, '{', '[', ']', '}'
@@ -462,7 +483,7 @@ public class StackCalculator {
 	
 	private boolean isLeftAssociative(char c) {//checks if an object is left associative
 		switch(c) {
-		//case '^':
+		
 		case '%':
 		case '/':
 		case '-':

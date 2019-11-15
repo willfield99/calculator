@@ -212,14 +212,11 @@ public class StackCalculator {
 	/*Pre Condition- char i is the current token from the expression queue, char s is the operator at the top of the stack. This method determines whether
 	 * the operator stack used in toPostFix should pop before pushing the current character.
 	 * 
-	 * Post Condition- returns true if the stack should pop before pushing the current character.
+	 * Post Condition- returns true if the operator stack should pop before pushing the current character.
 	*/
 
 	private boolean run(char i, char s) {//see below
-		/*
-		 * run is used to check if operator stack should pop before pushing the current character
-		 * 
-		 * runs while stacks not empty, top is greater precedence than s,
+		/*	runs while stacks not empty, top is greater precedence than s,
 		 *  or top is equal precedence and left associative, and s is not a left parenthesis 
 		 */ 
 		if(!ops.isEmpty()) {					
@@ -231,6 +228,12 @@ public class StackCalculator {
 		}
 		return false;
 	}
+	
+	/*Pre Condition-
+	 * 
+	 *Post Condition-
+	 * 
+	 */
 	
 	private boolean checkString(String s) {//checks the string for proper formatting before putting it into the postfix algorithm
 		int p, b, c;//represent parentheses, brackets, and curly brackets

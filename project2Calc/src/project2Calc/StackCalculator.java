@@ -24,6 +24,10 @@ public class StackCalculator {
 		run = true;//run defaults to true
 	}
 	
+	/*Pre Condition- String ex contains a mathematical expression that is properly formatted, or a properly formatted variable declaration.
+	 * 
+	 * Post Condition- The calculated answer is returned, or the variable declaration is confirmed. If either were improperly formatted an error is returned.
+	*/
 	public void processInput(String ex) {//calculates the value of a postfix expression
 		run = true;
 		
@@ -124,7 +128,10 @@ public class StackCalculator {
 			System.out.println("0");
 		}
 	}
-	
+	/*Pre Condition- A new variable has been declared, String ex is the expression that the variable has been set to.
+	 * 
+	 * Post Condition- The value of the expression and thus the variable is returned. (assuming the expression was properly formatted
+	*/
 	private String processNewVariable(String ex) {//calculates the value of an expression when creating a new variable 
 		//this method returns a string instead of printing out the answer
 		
@@ -201,12 +208,17 @@ public class StackCalculator {
 	return ans;//this answer is the value of the new variable
 		
 	}
+	
+	/*Pre Condition- char i is the current token from the expression queue, char s is the operator at the top of the stack. This method determines whether
+	 * the operator stack used in toPostFix should pop before pushing the current character.
+	 * 
+	 * Post Condition- returns true if the stack should pop before pushing the current character.
+	*/
 
 	private boolean run(char i, char s) {//see below
 		/*
 		 * run is used to check if operator stack should pop before pushing the current character
-		 * char i is the current token from the expression queue
-		 * char s is the operator at the top of the stack
+		 * 
 		 * runs while stacks not empty, top is greater precedence than s,
 		 *  or top is equal precedence and left associative, and s is not a left parenthesis 
 		 */ 

@@ -233,11 +233,11 @@ public class StackCalculator {
 			if(Character.isLetter(character)) {//if character
 				String value = var.get(character);
 				
-				if(value == null) {
-					System.out.println("Undefined Variable " + character);
+				if(i < characters.length && value == null && Character.isLetter(characters[i + 1])) {
+					System.out.println("Invalid Variable Name " + s.substring(i, i + 2));
 					return false;
-				}else if(i > 0 && Character.isLetter(characters[i-1])) {
-					System.out.println("Invalid Variable Name " + s.substring(i - 1, i + 1));
+				}else if(value == null) {
+					System.out.println("Undefined Variable " + character);
 					return false;
 				}
 			}else if(!Character.isDigit(character) && !Character.isLetter(character)) {
@@ -319,7 +319,7 @@ public class StackCalculator {
 			if(Character.isLetter(current)){//converting variables to their numeric values
 				
 				String value = var.get(current);
-				if(value.equals(null)) {
+				if(value == null) {
 					System.out.println("Undefined variable " + current);
 				}else {
 					out.add(value);

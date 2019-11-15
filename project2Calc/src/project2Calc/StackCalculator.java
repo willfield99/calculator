@@ -232,7 +232,8 @@ public class StackCalculator {
 		for(char character: characters) {
 			if(Character.isLetter(character)) {//if character
 				String value = var.get(character);
-				if(value.isEmpty()) {
+				
+				if(value == null) {
 					System.out.println("Undefined Variable " + character);
 					return false;
 				}else if(i > 0 && Character.isLetter(characters[i-1])) {

@@ -1,20 +1,18 @@
 package project2Calc;
-//TESTT
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
-import java.util.StringTokenizer;
 
 public class StackCalculator {
 
 	Stack<Character> ops;//holds the operators
 	Queue<Character> exp;//expression is read into this queue
-	StringTokenizer st;//tokenizes the strings from the expression queue
 	Queue<Object> out;//holds the postfix expression
 	HashMap<Character, String> var;//holds the variables
-	Precedence p;
+	Precedence p;//used to check operator precedence during conversion to post fix
 	boolean run;//tells the calculator to run
 	
 	public StackCalculator() {//constructor
@@ -23,13 +21,13 @@ public class StackCalculator {
 		out = new LinkedList<>();
 		var = new HashMap<Character, String>(52);
 		p = new Precedence();
-		run = true;
+		run = true;//run defaults to true
 	}
 	
 	public void processInput(String ex) {//calculates the value of a postfix expression
 		run = true;
 		
-		ex = ex.replaceAll("\\s","");//taking out whitespacce
+		ex = ex.replaceAll("\\s","");//taking out whitespace
 	
 		if (ex != null && !ex.isEmpty()) { //runs if the expression string is not empty
 		
@@ -108,7 +106,7 @@ public class StackCalculator {
 		        break;
 		     
 		     default:
-		    	 System.out.println("Error at processInput switch");
+		    	 System.out.println("Error at processInput switch");//in case somehow an incorrect operator slips by...(i dont think it ever happens but you never know)
 		    	 break;
 		    }
 		}
@@ -193,14 +191,14 @@ public class StackCalculator {
 		        break;
 		     
 		     default:
-		    	 System.out.println("Error at processInput switch");
+		    	 System.out.println("Error at processInput switch");//in case somehow an incorrect operator slips by...(i dont think it ever happens but you never know)
 		    	 break;
 		    }
 		}
 		}
 	String ans = String.valueOf(calc.pop());//the final element in the stack is the answer
 	
-	return ans;
+	return ans;//this answer is the value of the new variable
 		
 	}
 
@@ -230,7 +228,7 @@ public class StackCalculator {
 		int i = 0;//index of the for loop
 				
 		for(char character: characters) {
-			if(Character.isLetter(character)) {
+			if(Character.isLetter(character)) {//handling variable related errors
 				String value = var.get(character);
 				
 				if(i < characters.length && value == null && Character.isLetter(characters[i + 1])) {//handles variable names longer than 1 letter in length
@@ -241,17 +239,17 @@ public class StackCalculator {
 					}
 					System.out.println("Invalid Variable Name " + s.substring(i, j));
 					return false;
-				}else if(value == null) {
+				}else if(value == null) {//handles undefined variables (character is not a key to the hashmap var)
 					System.out.println("Undefined Variable " + character);
 					return false;
 				}
 				}else if(!Character.isDigit(character) && !Character.isLetter(character)) {
-					if(!isOperator(character)) {//handles invalid symbols
+					if(!isOperator(character)) {							//handles invalid symbols
 						System.out.println("Invalid Symbol" + character);
 						return false;
 					}
 					
-				else if(isOperator(character)) {//handling mismatched parentheses
+				else if(isOperator(character)) {//handling mismatched parentheses, right parentheses should always pop left parentheses
 						switch(character) {
 						case '(':
 							p ++;
@@ -306,19 +304,20 @@ public class StackCalculator {
 		char [] characters = s.toCharArray();
 		Queue<Character> expression = new LinkedList<Character>();
 		char current;
-		for(char ch : characters) {//adding all characters to the initial queue
+		for(char ch : characters) {//adding all characters to the expression queue
 			expression.add(ch);
 		}
-		int count = 0;
-		while(!expression.isEmpty()) {
+		int count = 0;//count should never be above 1
+		while(!expression.isEmpty()) {//goes through the queue, looking for consecutive operators
 			current = expression.remove();
-			if(isOperator(current) && current != '(' && current != ')' && !(current == '-' && !isOperator(expression.peek()))) {
+			if(isOperator(current) && current != '(' && current != ')' && !(current == '-' && !isOperator(expression.peek()))) {//parentheses and minuses that 
+				//signal negative numbers do not increase count
 				count ++;
 				if(count > 1) {
-					System.out.println("Nonsensical Input " + s);
+					System.out.println("Nonsensical Input " + s);//printing the error
 					return false;
 				}
-			}else if(current == '(' || current == ')' || !isOperator(current)) {
+			}else if(current == '(' || current == ')' || !isOperator(current)) {//count gets at each number or variable
 				count = 0;
 			}
 		}
@@ -439,15 +438,15 @@ public class StackCalculator {
 		return postfix;
 	}
 	
-	private String cleanString(String s) {//takes out double asterisks, double subtraction signs, '{', '[', ']', '}'
+	private String cleanString(String s) {//takes out double asterisks, double subtraction signs, and '{', '[', ']', '}'.
 
 		for(int i = 0; i < s.length(); i++) {
 			if(i > 0) {
-				if(s.charAt(i - 1) == '-' && s.charAt(i) == '-') {
+				if(s.charAt(i - 1) == '-' && s.charAt(i) == '-') {//taking out double subtraction signs
 					String pre = s.substring(0, i - 1);
 					String post = s.substring(i + 1);
 					s = pre + post;				
-				}else if(s.charAt(i - 1) == '*' && s.charAt(i) == '*') {
+				}else if(s.charAt(i - 1) == '*' && s.charAt(i) == '*') {//taking out double multiplication signs and replacing with ^
 					String pre = s.substring(0, i - 1);
 					String post = s.substring(i + 1);
 					s = pre + "^" + post;
@@ -457,7 +456,7 @@ public class StackCalculator {
 		}
 		
 		for(int i = 0; i < s.length(); i++) {
-			if(s.charAt(i) == '{' || s.charAt(i) == '[') {
+			if(s.charAt(i) == '{' || s.charAt(i) == '[') {// replacing brackets and curly brackets with parentheses
 				String pre = s.substring(0, i);
 				String post = s.substring(i + 1);
 				s = pre + "(" + post;
@@ -471,7 +470,7 @@ public class StackCalculator {
 		return s;
 	}
 		
-	private boolean isOperator(char c) {//used to check if the character is an operand
+	private boolean isOperator(char c) {//used to check if the character is a correct operator
 		Character [] goodops = {'{', '}', '[', ']', '(', ')', '^', '*', '/', '%', '+', '-'};
 		for(int i = 0; i < goodops.length; i++) {
 			if(c == goodops[i]) {
@@ -483,7 +482,6 @@ public class StackCalculator {
 	
 	private boolean isLeftAssociative(char c) {//checks if an object is left associative
 		switch(c) {
-		
 		case '%':
 		case '/':
 		case '-':
@@ -496,5 +494,3 @@ public class StackCalculator {
 	}
 			
 	}
-	
-	

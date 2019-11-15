@@ -5,7 +5,7 @@ public static void main (String[] args) {
 	
 	StackCalculator test = new StackCalculator();
 	
-	test.processInput("ABC");
+	test.processInput("a = 5");
 	System.out.println("");
 
 	

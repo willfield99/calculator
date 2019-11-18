@@ -46,7 +46,7 @@ public class StackCalculator {
 		
 			char key = ex.charAt(0);//the key of the value
 			String val = processNewVariable(ex.substring(2));//the value to be stored
-			var.put(key, val);
+			var.put(key, val);//storing value
 			System.out.println(key + " is set to " + val);
 		}
 		
@@ -71,7 +71,7 @@ public class StackCalculator {
 		    	calc.push(t);//all integers get pushed to the stack
 		       
 		    } catch (NumberFormatException e) {
-		      // not an integer!
+		      // not an integer
 		    }		        
 		    }
 		   
@@ -161,7 +161,7 @@ public class StackCalculator {
 		    	calc.push(t);
 		       
 		    } catch (NumberFormatException e) {
-		      // not an integer!
+		      // not an integer
 		    }		        
 		    }
 		   
@@ -485,11 +485,11 @@ public class StackCalculator {
 				if(s.charAt(i - 1) == '-' && s.charAt(i) == '-') {//taking out double subtraction signs
 					String pre = s.substring(0, i - 1);
 					String post = s.substring(i + 1);
-					s = pre + post;				
+					s = pre + post;//reconstructing the string
 				}else if(s.charAt(i - 1) == '*' && s.charAt(i) == '*') {//taking out double multiplication signs and replacing with ^
 					String pre = s.substring(0, i - 1);
 					String post = s.substring(i + 1);
-					s = pre + "^" + post;
+					s = pre + "^" + post;//reconstructing the string
 				}
 				
 			}
@@ -499,11 +499,11 @@ public class StackCalculator {
 			if(s.charAt(i) == '{' || s.charAt(i) == '[') {// replacing brackets and curly brackets with parentheses
 				String pre = s.substring(0, i);
 				String post = s.substring(i + 1);
-				s = pre + "(" + post;
+				s = pre + "(" + post;//reconstructing the string
 			}else if(s.charAt(i) == '}' || s.charAt(i) == ']') {
 				String pre = s.substring(0, i);
 				String post = s.substring(i + 1);
-				s = pre + ")" + post;
+				s = pre + ")" + post;//reconstructing
 			}
 		}
 		

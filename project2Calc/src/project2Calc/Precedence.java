@@ -2,6 +2,13 @@ package project2Calc;
 
 import java.util.Comparator;
 
+/*William Field and Abby Mattingly
+ * 11/18/19
+ * 
+ * Precedence is a comparator class that is used to compare operators precedence in PEMDAS order. '%' is the same precedence As muliplication and division.
+ * This class is used by the toPostFix method of StackCalculator
+ * 
+ */
 public class Precedence implements Comparator<Character>{
 
 	@Override
@@ -16,10 +23,6 @@ public class Precedence implements Comparator<Character>{
 	private int intassign(char c) {//assigns int values to characters precedence to compare them
 		int val = 0;
 		switch(c) {
-		/*case '(' :
-		case ')':
-			val = 4;
-			*/
 		case '^':
 			val = 3;
 			break;
@@ -35,7 +38,7 @@ public class Precedence implements Comparator<Character>{
 			break;
 			
 			default:
-				//not a correct operand
+				System.out.println("Error: Invalid Operator");//not a correct operand
 		}
 		
 		return val;

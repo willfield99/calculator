@@ -6,6 +6,13 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
+/*William Field and Abby Mattingly
+ * 11/18/19
+ * 
+ * The StackCalculator is used to create a StackCalculator Object, which is a fully functioning integer expression calculator. StackCalculator handles variable declarations, parentheses, modulus, exponents, etc...
+ * and returns an error if the expression is not properly formatted. The expression is converted to post fix notation using the toPostFix function, which implements the 
+ * Shunting-Yard algorithm. The answer of the expression is then calculated in the processInput method. This calculator does not handle decimal input.
+ */
 public class StackCalculator {
 
 	Stack<Character> ops;//holds the operators
@@ -24,9 +31,9 @@ public class StackCalculator {
 		run = true;//run defaults to true
 	}
 	
-	/*Pre Condition- String ex contains a mathematical expression that is properly formatted, or a properly formatted variable declaration.
+	/*Pre Condition- String ex contains a mathematical expression or variable declaration.
 	 * 
-	 * Post Condition- The calculated answer is returned, or the variable declaration is confirmed. If either were improperly formatted an error is returned.
+	 * Post Condition- The calculated answer is returned, or the variable declaration is confirmed. If the input was improperly formatted an error is returned.
 	*/
 	public void processInput(String ex) {//calculates the value of a postfix expression
 		run = true;
@@ -128,10 +135,12 @@ public class StackCalculator {
 			System.out.println("0");
 		}
 	}
+	
 	/*Pre Condition- A new variable has been declared, String ex is the expression that the variable has been set to.
 	 * 
-	 * Post Condition- The value of the expression and thus the variable is returned. (assuming the expression was properly formatted
+	 * Post Condition- The value of the expression and thus the variable is returned. (assuming the expression was properly formatted)
 	*/
+	
 	private String processNewVariable(String ex) {//calculates the value of an expression when creating a new variable 
 		//this method returns a string instead of printing out the answer
 		
@@ -229,10 +238,10 @@ public class StackCalculator {
 		return false;
 	}
 	
-	/*Pre Condition-
+	/*Pre Condition-An expression in string form with white space removed is entered
 	 * 
-	 *Post Condition-
-	 * 
+	 *Post Condition-returns a true boolean and allows the toPostFix method to run if proper variable names are used, defined variables are used, proper symbols are used,
+	 *and parentheses are balanced/equal.
 	 */
 	
 	private boolean checkString(String s) {//checks the string for proper formatting before putting it into the postfix algorithm
@@ -315,6 +324,11 @@ public class StackCalculator {
 		return true;
 	}
 	
+	/*Pre Condition-String s is an expression that has had whitespace removed, and gone through checkString and cleanString.
+	 * 
+	 *Post Condition- Returns true and allows toPostFix to continue to run if the string does not contain any nonsensical input (ie: 1 +-* 3)
+	 */
+	
 	private boolean checkNonsensical(String s) {//handling nonsensical input
 		char [] characters = s.toCharArray();
 		Queue<Character> expression = new LinkedList<Character>();
@@ -340,6 +354,10 @@ public class StackCalculator {
 		return true;
 	}
 	
+	/*Pre Condition-String s is being processed by processInput or is the the expression of a variable declaration
+	 * 
+	 *Post Condition- s is returned in post fix form if s has been properly formatted. Otherwise an error is returned.
+	 */
 	
 	private ArrayList<String> toPostFix(String s) {//converts a string expression from in fix to post fix
 		int count = -1; //where the algorithm is at in the char array, starts at -1 one so that the 
@@ -453,6 +471,13 @@ public class StackCalculator {
 		return postfix;
 	}
 	
+	/*Pre Condition-String s is an expression that has had whitespace removed and gone through checkString.
+	 * 
+	 *Post Condition-s is returned with out double asterisks, double subtraction signs, and '{', '[', ']', '}'. these symbols are replaced
+	 *with mathematically equivalent symbols that simplify the expression resulting in a smoother conversion to post fix.
+	 * 
+	 */
+	
 	private String cleanString(String s) {//takes out double asterisks, double subtraction signs, and '{', '[', ']', '}'.
 
 		for(int i = 0; i < s.length(); i++) {
@@ -484,6 +509,11 @@ public class StackCalculator {
 		
 		return s;
 	}
+	
+	/*Pre Condition- char c is a symbol used in the expression
+	 * 
+	 *Post Condition-true is returned if the symbol is a valid operator for the calculator
+	 */
 		
 	private boolean isOperator(char c) {//used to check if the character is a correct operator
 		Character [] goodops = {'{', '}', '[', ']', '(', ')', '^', '*', '/', '%', '+', '-'};
@@ -495,7 +525,12 @@ public class StackCalculator {
 		return false;
 	}
 	
-	private boolean isLeftAssociative(char c) {//checks if an object is left associative
+	/*Pre Condition-char c is a symbol that has returned true in isOperator
+	 * 
+	 *Post Condition-true is returned if the symbol is a left associative operator that is used by the calculator.
+	 */
+	
+	private boolean isLeftAssociative(char c) {//checks if a character is left associative
 		switch(c) {
 		case '%':
 		case '/':
@@ -506,6 +541,5 @@ public class StackCalculator {
 		default:
 			return false;
 			}
-	}
-			
+	}			
 	}

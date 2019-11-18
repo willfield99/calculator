@@ -17,17 +17,17 @@ public class StackCalculator {
 
 	Stack<Character> ops;//holds the operators
 	Queue<Character> exp;//expression is read into this queue
-	Queue<Object> out;//holds the postfix expression
+	Queue<Object> postFixOutput;//holds the postfix expression
 	HashMap<Character, String> var;//holds the variables
-	Precedence p;//used to check operator precedence during conversion to post fix
+	Precedence precedence;//used to check operator precedence during conversion to post fix
 	boolean run;//tells the calculator to run
 	
 	public StackCalculator() {//constructor
 		ops = new Stack<Character>();
 		exp = new LinkedList<Character>();
-		out = new LinkedList<>();
+		postFixOutput = new LinkedList<>();
 		var = new HashMap<Character, String>(52);
-		p = new Precedence();
+		precedence = new Precedence();
 		run = true;//run defaults to true
 	}
 	
@@ -229,7 +229,7 @@ public class StackCalculator {
 		 *  or top is equal precedence and left associative, and s is not a left parenthesis 
 		 */ 
 		if(!ops.isEmpty()) {					
-		if((0 > p.compare(i, s) || (0 == p.compare(i, s) && isLeftAssociative(i))) && s != '(') {
+		if((0 > precedence.compare(i, s) || (0 == precedence.compare(i, s) && isLeftAssociative(i))) && s != '(') {
 			return true;
 		}else {
 			return false;
@@ -386,7 +386,7 @@ public class StackCalculator {
 				if(value == null) {
 					System.out.println("Undefined variable " + current);
 				}else {
-					out.add(value);
+					postFixOutput.add(value);
 				}
 				
 			}else if(Character.isDigit(current)) {//adding all numbers to out queue			 
@@ -398,7 +398,7 @@ public class StackCalculator {
 					  count++;
 					  ch += String.valueOf(j);
 				}				
-				out.add(ch);//adding to out queue
+				postFixOutput.add(ch);//adding to output queue
 				
 			}
 			else if(isOperator(current)) {
@@ -412,7 +412,7 @@ public class StackCalculator {
 							  count++;
 							  ch += String.valueOf(j);
 						}				
-						out.add(ch);
+						postFixOutput.add(ch);
 						
 					}
 				
@@ -421,7 +421,7 @@ public class StackCalculator {
 					
 				}else if(current == ')'){
 					while(ops.peek() != '(') {//pops and pushes to output queue until finding a left parentheses
-						out.add(ops.pop());
+						postFixOutput.add(ops.pop());
 					}
 					ops.pop();//popping the left parentheses from the ops stack
 				}
@@ -436,7 +436,7 @@ public class StackCalculator {
 					
 						while(run(current, top)) {
 					
-						out.add(ops.pop());
+						postFixOutput.add(ops.pop());
 					
 					if(!ops.isEmpty()) {//if the stacks not empty set a new top
 						top = ops.peek();
@@ -452,12 +452,12 @@ public class StackCalculator {
 		}
 			while(!ops.isEmpty()) {//adding rest of operator stack to output queue
 				String as = String.valueOf(ops.pop());
-				out.add(as);
+				postFixOutput.add(as);
 				
 			}
 		
-			while(!out.isEmpty() && run == true) {
-				String e = String.valueOf(out.remove());
+			while(!postFixOutput.isEmpty() && run == true) {
+				String e = String.valueOf(postFixOutput.remove());
 				//if(!e.equals("(") && !e.contentEquals(")")){
 				postfix.add(e);
 				//}

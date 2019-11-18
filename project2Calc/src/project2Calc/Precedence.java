@@ -38,7 +38,7 @@ public class Precedence implements Comparator<Character>{
 			break;
 			
 			default:
-				System.out.println("Error: Invalid Operator");//not a correct operand
+				//default is val is 0
 		}
 		
 		return val;

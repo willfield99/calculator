@@ -258,10 +258,10 @@ public class StackCalculator {
 				if(i < characters.length && value == null && Character.isLetter(characters[i + 1])) {//handles variable names longer than 1 letter in length
 					int j = i + 1;
 					
-					while(j < characters.length && Character.isLetter(characters[j])) {
+					while(j < characters.length && Character.isLetter(characters[j])) {//getting the invalid name
 						j ++;
 					}
-					System.out.println("Invalid Variable Name " + s.substring(i, j));
+					System.out.println("Invalid Variable Name " + s.substring(i, j));//printing error
 					return false;
 				}else if(value == null) {//handles undefined variables (character is not a key to the hashmap var)
 					System.out.println("Undefined Variable " + character);
